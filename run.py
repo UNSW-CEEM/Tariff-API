@@ -21,9 +21,13 @@ def base():
 
 @app.route('/LoadProfiles/Avg')
 def avgload():
-    with open('{}\Tariff-API\AllData.json'.format(cwd)) as data_file:
+    with open('{}\AllData.json'.format(cwd)) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
+
+
+# Do we need another end point to give icelab/the user the demographic options, then they can select from these
+# options to make a specific request, as per the end point below.
 
 
 # Here you go to http://127.0.0.1:5000/LoadProfiles/Demog/lpnum
@@ -31,7 +35,7 @@ def avgload():
 
 @app.route('/LoadProfiles/Demog/<lpnum>')
 def data(lpnum):
-    with open('{}\Tariff-API\AllData_Demog.json'.format(cwd)) as data_file:
+    with open('{}\AllData_Demog.json'.format(cwd)) as data_file:
         data_loaded = json.load(data_file)
         for i in range(len(data_loaded)):
             data_loaded[i] = {k: data_loaded[i][k] for k in data_loaded[i] if (k == lpnum or k == 'TS')}
@@ -44,7 +48,7 @@ def data(lpnum):
 
 @app.route('/Tariffs/AllTariffs')
 def Alltariffs():
-    with open('{}\Tariff-API\AllTariffs.json'.format(cwd)) as data_file:
+    with open('{}\AllTariffs.json'.format(cwd)) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
 

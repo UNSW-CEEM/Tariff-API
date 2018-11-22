@@ -6,7 +6,7 @@ import pandas as pd
 import requests
 from datetime import datetime
 import numpy as np
-from bill_calculator import bill_calculator
+#from bill_calculator import bill_calculator
 
 # ---------- Preparing inputs -----------------
 Tariff = 'T00001'  # Selected tariff : This input is coming from user . Preset to this tariff for testing. Remove later
@@ -19,16 +19,28 @@ df['TS'] = pd.to_datetime(df['TS'], unit='ms')
 df = df[['TS', 'Load']]
 main_load_profile = df.copy()
 
-# After user selects the tariff, the parameters of the tariff is selected from this list
-AllTariffs = requests.get('http://127.0.0.1:5000/Tariffs/AllTariffs')
-AllTariffs = AllTariffs.json()
-for i in range(len(AllTariffs)):
-    if AllTariffs[i]['Tariff Code'] == Tariff:
-        selected_tariff = AllTariffs[i]
-
-main_tariff = selected_tariff.copy()
 
 # ---------- Functions -----------------
+# Interface to calcs with single function so the UI doesn't need to know about the different types of tariffs?
+def calc(load_profile, tariff_name):
+    # After user selects the tariff, the parameters of the tariff is selected from this list
+    all_tariffs = requests.get('http://127.0.0.1:5000/Tariffs/AllTariffs')
+    all_tariffs = all_tariffs.json()
+    for i in range(len(all_tariffs)):
+        if all_tariffs[i]['Tariff Code'] == Tariff:
+            selected_tariff = all_tariffs[i]
+
+    main_tariff = selected_tariff.copy()
+
+    if main_tariff['Type'] == 'Flat_rate':
+        total_bill = fr_calc(main_load_profile, main_tariff)
+    elif main_tariff['Type'] == 'TOU':
+        total_bill = tou_calc(main_load_profile, main_tariff)
+    else:
+        total_bill = 'Error'
+
+    return total_bill
+
 
 def pre_processing_load(load_profile):
 
@@ -121,10 +133,5 @@ def tou_calc(load_profile, tariff):
 
 
 # ---------- Bill calculation -----------------
-
-if main_tariff['Type'] == 'Flat_rate':
-    total_bill = fr_calc(main_load_profile, main_tariff)
-elif main_tariff['Type'] == 'TOU':
-    total_bill = tou_calc(main_load_profile, main_tariff)
-else:
-    total_bill = 'Error'
+bill = calc(main_load_profile, Tariff)
+print(bill)
