@@ -7,6 +7,7 @@ name = "pypi"
 flask = "*"
 pyfladesk = "*"
 routes = "*"
+pandas = "*"
 
 [dev-packages]
 
