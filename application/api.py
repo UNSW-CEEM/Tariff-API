@@ -44,8 +44,15 @@ def data(lpnum):
 
 @app.route('/Tariffs/AllTariffs')
 def Alltariffs():
-    with open(os.path.join('application','AllTariffs.json')) as data_file:
+    with open(os.path.join('application', 'AllTariffs.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
+
+@app.route('/elec-tariffs/retail')
+def retail_tariff():
+    with open(os.path.join('application', 'AllTariffs.json')) as data_file:
+        data_loaded = json.load(data_file)
+        return jsonify(data_loaded)
+
 
 
