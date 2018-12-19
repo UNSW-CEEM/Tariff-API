@@ -3,9 +3,10 @@ import os
 import io
 import json
 import pandas as pd
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 # cwd = os.getcwd()
 
 

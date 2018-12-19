@@ -9,6 +9,7 @@ pyfladesk = "*"
 routes = "*"
 pandas = "*"
 gunicorn = "*"
+flask-cors = "*"
 
 [dev-packages]
 
