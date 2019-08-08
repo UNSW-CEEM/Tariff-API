@@ -13,7 +13,7 @@ CORS(app)
 
 @app.route('/')
 def base():
-    return jsonify('Welcome to CEEM''s API centre! Please select an API. For example: /LoadProfiles/Avg OR /LoadProfiles/Demog/<lpnum> OR /Tariffs/AllTariffs')
+    return jsonify('Welcome to CEEM''s API centre! Please select an API. For example: api.ceem.org.au/elec-tariffs/network')
     # return jsonify(cwd)
 
 
