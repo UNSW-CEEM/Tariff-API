@@ -48,15 +48,46 @@ def Alltariffs():
     with open(os.path.join('application', 'AllTariffs_Retail.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
-# todo: adding versions for the retail and network tariffs. Probably like elec-tariffs/retail/v1
+
+# This part is for previous versions of retail tariffs
+@app.route('/elec-tariffs/retail-previous-version/<version>')
+def retail_tariff(version):
+    with open(os.path.join('application', 'AllTariffs_Retail_{}.json'.format(version))) as data_file:
+        data_loaded = json.load(data_file)
+        return jsonify(data_loaded)
+
+#  Track the versions and dates
+@app.route('/elec-tariffs/retail-previous-version-list')
+def retail_tariff(version):
+    with open(os.path.join('application', 'AllTariffs_Retail_Version_Track.json')) as data_file:
+        data_loaded = json.load(data_file)
+        return jsonify(data_loaded)
+
+# Most up to date version
 @app.route('/elec-tariffs/retail')
 def retail_tariff():
     with open(os.path.join('application', 'AllTariffs_Retail.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
-    
-@app.route('/elec-tariffs/network/<version>')
+
+ # This part is for previous versions of network tariffs
+
+@app.route('/elec-tariffs/network-previous-versions/<version>')
 def network_tariff(version):
     with open(os.path.join('application', 'AllTariffs_Network_{}.json'.format(version))) as data_file:
+         data_loaded = json.load(data_file)
+         return jsonify(data_loaded)
+
+#  Track the versions and dates
+@app.route('/elec-tariffs/network-previous-versions-list')
+def network_tariff():
+    with open(os.path.join('application', 'AllTariffs_Network_Version_Track.json')) as data_file:
+         data_loaded = json.load(data_file)
+         return jsonify(data_loaded)
+
+# Most up to date version
+@app.route('/elec-tariffs/network')
+def network_tariff():
+    with open(os.path.join('application', 'AllTariffs_Network.json')) as data_file:
          data_loaded = json.load(data_file)
          return jsonify(data_loaded)
