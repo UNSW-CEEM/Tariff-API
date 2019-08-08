@@ -1,1 +1,1 @@
-[{"v1": {"Date":"2019-07-08","Description:"old version"}},{"v2": {"Date":"2019-08-08","Description:"updated and most recent version"}}]
+[{"v1": {"Date": "2018-10-12", "Description": "initial move to python"}}, {"v2": {"Date": "2019-07-01", "Description": "fixed issues"}}, {"v3": {"Date": "2019-08-08", "Description": "Added 2019 tariffs for VIC"}}]
