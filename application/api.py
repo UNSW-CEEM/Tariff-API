@@ -48,16 +48,16 @@ def Alltariffs():
     with open(os.path.join('application', 'AllTariffs_Retail.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
-
+# todo: adding versions for the retail and network tariffs. Probably like elec-tariffs/retail/v1
 @app.route('/elec-tariffs/retail')
 def retail_tariff():
     with open(os.path.join('application', 'AllTariffs_Retail.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
     
-@app.route('/elec-tariffs/network')
-def network_tariff():
-    with open(os.path.join('application', 'AllTariffs_Network.json')) as data_file:
+@app.route('/elec-tariffs/network/<version>')
+def network_tariff(version):
+    with open(os.path.join('application', 'AllTariffs_Network_{}.json'.format(version))) as data_file:
          data_loaded = json.load(data_file)
          return jsonify(data_loaded)
 
