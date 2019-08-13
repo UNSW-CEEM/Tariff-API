@@ -131,7 +131,7 @@ def network_tariff():
 #  most recent version
 @app.route('/weather/<startdate>/<enddate>/<site>')
 def weather_data(startdate, enddate, site):
-    with sqlite3.connect('nasa_power.db') as con:
+    with sqlite3.connect(os.path.join('application', 'nasa_power.db')) as con:
         newdata = pd.read_sql_query(con=con,
                                     sql='select TS, CDD, HDD from HDDCDD where TS > {} and TS < {} and Site == {}'.format(
                                         startdate, enddate, site))
