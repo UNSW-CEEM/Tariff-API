@@ -10,7 +10,7 @@ app = Flask(__name__)
 CORS(app)
 # cwd = os.getcwd()
 
-
+# refer to Tariff-API-data-prep for preparing the backend data
 
 @app.route('/')
 def base():
@@ -128,12 +128,11 @@ def network_tariff():
         return jsonify(data_loaded)
 
 
-#  most recent version
-@app.route('/weather/<startdate>/<enddate>/<site>')
-def weather_data(startdate, enddate, site):
+#  weather data from NASA Power
+@app.route('/weather/<start_date>/<end_date>/<lat>/<long>')
+def weather_data(start_date, end_date, lat, long):
     with sqlite3.connect(os.path.join('application', 'nasa_power.db')) as con:
-        newdata = pd.read_sql_query(con=con,
-                                    sql='select TS, CDD, HDD from HDDCDD where TS > {} and TS < {} and Site == {}'.format(
-                                        startdate, enddate, site))
-        newdata2 = newdata.to_json(orient='records')
-        return jsonify(newdata2)
+        data_w = pd.read_sql_query(con=con, sql='select TS, CDD, HDD from data where TS > {} and TS < {}'
+                                                ' and lat == {} and long == {}'.format(start_date, end_date, lat, long))
+        data_w2 = data_w.to_json(orient='records')
+        return jsonify(data_w2)
