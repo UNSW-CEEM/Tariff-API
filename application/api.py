@@ -136,7 +136,4 @@ def weather_data(startdate, enddate, site):
                                     sql='select TS, CDD, HDD from HDDCDD where TS > {} and TS < {} and Site == {}'.format(
                                         startdate, enddate, site))
         newdata2 = newdata.to_json(orient='records')
-        # return jsonify(data_loaded)
-    with open(os.path.join('application', 'AllTariffs_Network.json')) as data_file:
-        data_loaded = json.load(data_file)
-        return jsonify(data_loaded)
+        return jsonify(newdata2)
