@@ -131,6 +131,8 @@ def network_tariff():
 #  weather data from NASA Power
 @app.route('/weather/<start_date>/<end_date>/<lat>/<long>')
 def weather_data(start_date, end_date, lat, long):
+    lat = round(2 * float(lat)) / 2
+    long = round(2 * float(long)) / 2
     with sqlite3.connect(os.path.join('application', 'nasa_power.db')) as con:
         data_w = pd.read_sql_query(con=con, sql='select TS, CDD, HDD from data where TS > {} and TS < {}'
                                                 ' and lat == {} and long == {}'.format(start_date, end_date, lat, long))
