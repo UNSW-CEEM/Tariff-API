@@ -136,6 +136,5 @@ def weather_data(start_date, end_date, lat, long):
     with sqlite3.connect(os.path.join('application', 'nasa_power.db')) as con:
         data_w = pd.read_sql_query(con=con, sql='select TS, CDD, HDD from data where TS > {} and TS < {}'
                                                 ' and lat == {} and long == {}'.format(start_date, end_date, str(lat), str(long)))
-                                   
         data_w2 = data_w.to_json(orient='records')
         return jsonify(data_w2)
