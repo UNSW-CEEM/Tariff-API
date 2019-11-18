@@ -140,9 +140,11 @@ def weather_data(start_date, end_date, lat, long):
         return jsonify(data_w2)
 
 #  Tariff Docs
-@app.route('/return-files/')
-def return_files_tut():
-	try:
-		return send_file(os.path.join('PDFs', 'TN001_test.pdf'), attachment_filename='TN001_test.pdf')
+@app.route('/tariff-source/<tariff_id>')
+def return_files_tut(tariff_id):
+    pdf_to_tariff_map = pd.csv_read(os.path.join('PDFs', 'pdf_to_tariff_map.csv'))
+    try:
+        return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == tariff_id]['PDF'].values[0]) + '.pdf')
+        , attachment_filename='TN001_test.pdf')
 	except Exception as e:
 		return str(e)
