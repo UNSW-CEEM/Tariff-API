@@ -138,3 +138,11 @@ def weather_data(start_date, end_date, lat, long):
                                                 ' and lat == {} and long == {}'.format(start_date, end_date, str(lat), str(long)))
         data_w2 = data_w.to_json(orient='records')
         return jsonify(data_w2)
+
+#  Tariff Docs
+@app.route('/return-files/')
+def return_files_tut():
+	try:
+		return send_file(os.path.join('application', 'TN001_test.pdf'), attachment_filename='TN001_test.pdf')
+	except Exception as e:
+		return str(e)
