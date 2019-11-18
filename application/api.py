@@ -147,6 +147,7 @@ def tariff_source(tariff_id):
     # print(tariff_id)
     # print(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == str(tariff_id)]['PDF'].values[0])
     # try:
-    return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == 'TN0001']['PDF'].values[0]) + '.pdf'))
+    return send_file(os.path.join('PDFs', 'ActewAGL 2017-18.pdf'))
+    # return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == 'TN0001']['PDF'].values[0]) + '.pdf'))
 	# except Exception as e:
 	# 	return str(e)
