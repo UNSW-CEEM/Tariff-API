@@ -143,6 +143,6 @@ def weather_data(start_date, end_date, lat, long):
 @app.route('/return-files/')
 def return_files_tut():
 	try:
-		return send_file(os.path.join('application', 'TN001_test.pdf'), attachment_filename='TN001_test.pdf')
+		return send_file(os.path.join('PDFs', 'TN001_test.pdf'), attachment_filename='TN001_test.pdf')
 	except Exception as e:
 		return str(e)
