@@ -141,10 +141,9 @@ def weather_data(start_date, end_date, lat, long):
 
 #  Tariff Docs
 @app.route('/tariff-source/<tariff_id>')
-def return_files_tut(tariff_id):
+def tariff_source(tariff_id):
     pdf_to_tariff_map = pd.csv_read(os.path.join('PDFs', 'pdf_to_tariff_map.csv'))
     try:
-        return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == tariff_id]['PDF'].values[0]) + '.pdf')
-        , attachment_filename='TN001_test.pdf')
+        return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == str(tariff_id)]['PDF'].values[0]) + '.pdf'))
 	except Exception as e:
 		return str(e)
