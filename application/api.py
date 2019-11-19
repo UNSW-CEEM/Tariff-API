@@ -112,7 +112,7 @@ def retail_tariff():
 
 #  the version compatible with Tariff tool (nb: this name will change to retail and the previous one will be removed. It is not removed now because it is being used by SunSpoT
 @app.route('/elec-tariffs/retail_TDA')
-def retail_tariff():
+def retail_tariff_TDA():
     with open(os.path.join('application', 'AllTariffs_Retail_TDA.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
@@ -150,10 +150,13 @@ def weather_data(start_date, end_date, lat, long):
 # #  Tariff Docs
 @app.route('/tariff-source/<tariff_id>')
 def tariff_source(tariff_id):
-    pdf_to_tariff_map = pd.read_csv(os.path.join('application', 'PDFs', 'pdf_to_tariff_map.csv'))
-    # print(tariff_id)
-    # return(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == str(tariff_id)]['PDF'].values[0])
-    try:
-        return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == tariff_id]['PDF'].values[0]) + '.pdf'))
-    except:
-        return str('There is no document for this tariff.')
+    if tariff_id.startswith('TR'):
+        return str('We have obtained the retail tariffs from EnergyMadeEasy Website (https://www.energymadeeasy.gov.au/). Please refer to this website and search for this tariff for more information.')
+    else:
+        pdf_to_tariff_map = pd.read_csv(os.path.join('application', 'PDFs', 'pdf_to_tariff_map.csv'))
+        # print(tariff_id)
+        # return(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == str(tariff_id)]['PDF'].values[0])
+        try:
+            return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == tariff_id]['PDF'].values[0]) + '.pdf'))
+        except:
+            return str('There is no document for this tariff.')
