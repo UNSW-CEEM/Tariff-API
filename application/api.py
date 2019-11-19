@@ -143,11 +143,10 @@ def weather_data(start_date, end_date, lat, long):
 # #  Tariff Docs
 @app.route('/tariff-source/<tariff_id>')
 def tariff_source(tariff_id):
-    # pdf_to_tariff_map = pd.read_csv(os.path.join('PDFs', 'pdf_to_tariff_map.csv'))
+    pdf_to_tariff_map = pd.read_csv(os.path.join('application\\PDFs', 'pdf_to_tariff_map.csv'))
     # print(tariff_id)
-    # print(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == str(tariff_id)]['PDF'].values[0])
-    # try:
-    return send_file(os.path.join('PDFs', 'ActewAGL 2017-18.pdf'))
-    # return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == 'TN0001']['PDF'].values[0]) + '.pdf'))
-	# except Exception as e:
-	# 	return str(e)
+    # return(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == str(tariff_id)]['PDF'].values[0])
+    try:
+        return send_file(os.path.join('PDFs', str(pdf_to_tariff_map.loc[pdf_to_tariff_map['Tariff ID'] == tariff_id]['PDF'].values[0]) + '.pdf'))
+    except:
+        return str('There is no document for this tariff.')
