@@ -96,31 +96,32 @@ def Alltariffs():
 
 # This part is for previous versions of retail tariffs or the version list
 # try "/v1", "/v2", etc or "/versions" to track the version list
-@app.route('/elec-tariffs/retail/<version>')
+@app.route('/electricity-tariffs/retail/<version>')
 def retail_tariff_v(version):
     with open(os.path.join('application', 'AllTariffs_Retail_{}.json'.format(version))) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
 
 
-#  most recent version
-@app.route('/elec-tariffs/retail')
+#  the version compatible with Tariff tool (nb: this name will change to retail and the previous one will be removed. It is not removed now because it is being used by SunSpoT
+@app.route('/electricity-tariffs/retail')
 def retail_tariff():
     with open(os.path.join('application', 'AllTariffs_Retail.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
 
-#  the version compatible with Tariff tool (nb: this name will change to retail and the previous one will be removed. It is not removed now because it is being used by SunSpoT
-@app.route('/elec-tariffs/retail_TDA')
-def retail_tariff_TDA():
-    with open(os.path.join('application', 'AllTariffs_Retail_TDA.json')) as data_file:
+
+#  For SunSpoT project. We will remove this later
+@app.route('/elec-tariffs/retail')
+def retail_tariff_SunSpoT():
+    with open(os.path.join('application', 'AllTariffs_Retail_SunSpoT.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
 
 #  Network tariffs:
 # This part is for previous versions of Network tariffs or the version list
 # try "/v1", "/v2", etc or "/versions" to track the version list
-@app.route('/elec-tariffs/network/<version>')
+@app.route('/electricity-tariffs/network/<version>')
 def network_tariff_v(version):
     with open(os.path.join('application', 'AllTariffs_Network_{}.json'.format(version))) as data_file:
         data_loaded = json.load(data_file)
@@ -128,7 +129,7 @@ def network_tariff_v(version):
 
 
 #  most recent version
-@app.route('/elec-tariffs/network')
+@app.route('/electricity-tariffs/network')
 def network_tariff():
     with open(os.path.join('application', 'AllTariffs_Network.json')) as data_file:
         data_loaded = json.load(data_file)
