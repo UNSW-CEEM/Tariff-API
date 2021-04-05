@@ -193,40 +193,60 @@ def upload_file():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('uploaded_file',
                                     filename=filename))
-        file_read = pd.read_csv(file,header=None)
-        NEM12_1 = file_read.copy()
+        file_read = pd.read_csv(file)
+        # need to check the column numbers and decide about the type
+        if file_read.shape[1]>10:
+            NEM12_1 = file_read.copy()
+            Chunks = np.where((NEM12_1[NEM12_1.columns[0]] == 200) | (NEM12_1[NEM12_1.columns[0]] == 900))[0]
+            NEM12_2 = pd.DataFrame()
+            for i in range(0, len(Chunks) - 1):
+                if NEM12_1.iloc[Chunks[i], 4].startswith('E'):
+                    this_part = NEM12_1.iloc[Chunks[i] + 1: Chunks[i + 1], :].copy()
+                    this_part = this_part[this_part[this_part.columns[0]] == 300].copy()
+                    this_part2 = this_part.iloc[:, 2:50]
+                    this_part2 = this_part2.astype(float)
+                    if (this_part2[
+                            this_part2 < 0.01].count().sum() / this_part2.count().sum()) < 0.3:  # assume for controlled load more 30% of data points are zero
+                        NEM12_2 = NEM12_1.iloc[Chunks[i] + 1: Chunks[i + 1], :].copy()
+                        NEM12_2.reset_index(inplace=True, drop=True)
 
-        Chunks = np.where((NEM12_1[NEM12_1.columns[0]] == 200) | (NEM12_1[NEM12_1.columns[0]] == 900))[0]
-        NEM12_2 = pd.DataFrame()
-        for i in range(0, len(Chunks) - 1):
-            if NEM12_1.iloc[Chunks[i], 4].startswith('E'):
-                this_part = NEM12_1.iloc[Chunks[i] + 1: Chunks[i + 1], :].copy()
-                this_part = this_part[this_part[this_part.columns[0]] == 300].copy()
-                this_part2 = this_part.iloc[:, 2:50]
-                this_part2 = this_part2.astype(float)
-                if (this_part2[
-                        this_part2 < 0.01].count().sum() / this_part2.count().sum()) < 0.3:  # assume for controlled load more 30% of data points are zero
-                    NEM12_2 = NEM12_1.iloc[Chunks[i] + 1: Chunks[i + 1], :].copy()
-                    NEM12_2.reset_index(inplace=True, drop=True)
-
-        NEM12_2 = NEM12_2[NEM12_2[NEM12_2.columns[0]] == 300].copy()
-        NEM12_2[NEM12_2.columns[1]] = NEM12_2[NEM12_2.columns[1]].astype(int).astype(str)
-
-        Nem12 = NEM12_2.iloc[:, 1:50].melt(id_vars=[1], var_name="HH",
-                                           value_name="kWh")  # it was 49.. need to check if Dan manually changed it
-        Nem12['HH'] = Nem12['HH'] - 1
-        Nem12['kWh'] = Nem12['kWh'].astype(float)
-
-        Nem12['Datetime'] = pd.to_datetime(Nem12[1], format='%Y%m%d') + pd.to_timedelta(Nem12['HH'] * 30, unit='m')
-        Nem12.sort_values('Datetime', inplace=True)
-        # Nem12_ = Nem12.groupby(['Datetime','HH']).sum().reset_index()
-        Nem12.reset_index(inplace=True, drop=True)
-        sample_load = Nem12[['Datetime', 'kWh']].copy()
-        sample_load.rename(columns={'Datetime': 'TS'}, inplace=True)
-        sample_load['TS'] = pd.to_datetime(sample_load['TS'])
+            NEM12_2 = NEM12_2[NEM12_2[NEM12_2.columns[0]] == 300].copy()
+            NEM12_2[NEM12_2.columns[1]] = NEM12_2[NEM12_2.columns[1]].astype(int).astype(str)
+            NEM12_2 = NEM12_2.iloc[:, 0:49]
+            col_name = [i for i in range(0, 49)]
+            NEM12_2.columns = col_name
+            Nem12 = NEM12_2.iloc[:, 1:50].melt(id_vars=[NEM12_2.columns[1]], var_name="HH", value_name="kWh")  # it was 49.. need to check if Dan manually changed it
+            Nem12['HH'] = Nem12['HH'] - 1
+            Nem12['kWh'] = Nem12['kWh'].astype(float)
+            Nem12['Datetime'] = pd.to_datetime(Nem12[NEM12_2.columns[1]], format='%Y%m%d') + pd.to_timedelta(Nem12['HH'] * 30, unit='m')
+            Nem12.sort_values('Datetime', inplace=True)
+            # Nem12_ = Nem12.groupby(['Datetime','HH']).sum().reset_index()
+            Nem12.reset_index(inplace=True, drop=True)
+            sample_load = Nem12[['Datetime', 'kWh']].copy()
+            sample_load.rename(columns={'Datetime': 'TS'}, inplace=True)
+        else:
+            # file_read_2 = pd.read_csv(file)
+            file_read_2 = file_read.copy()
+            # check the column name if it has report.. for webgraph..
+            Report_cols = [col for col in file_read_2.columns if 'REPORT' in col]
+            kWh_Con = [col for col in file_read_2.columns if 'KWH_CON' in col]
+            if len(Report_cols)==2:
+                # it is webgraph
+                file_read_3 = file_read_2[['REPORT_DATE', 'REPORT_TIME',kWh_Con[0]]].copy()
+                file_read_3['R3'] = pd.to_datetime(file_read_3['REPORT_DATE'], format="%d/%m/%Y", errors='coerce')
+                file_read_3 = file_read_3.dropna()
+                file_read_3['TS'] = file_read_3['R3'] + pd.to_timedelta(file_read_3['REPORT_TIME'].str[0:2].astype(int), unit='H') + pd.to_timedelta(
+                    file_read_3['REPORT_TIME'].str[3:].astype(int), unit='m')
+                sample_load = file_read_3[['TS', kWh_Con[0]]].copy()
+                sample_load.columns = ['TS', 'kWh']
+        # sample_load['TS'] = pd.to_datetime(sample_load['TS'])
+        sample_load = sample_load.set_index('TS')
+        sample_load = sample_load.resample('30min', closed='right', label='right').sum()
+        sample_load = sample_load.reset_index()
         sample_load = sample_load[sample_load['TS'].dt.normalize() != '2020-02-29'].copy()
+
         sample_load['TS'] = sample_load['TS'].dt.strftime("%d/%m/%Y %H:%M")
-        # cols=file_read.columns
+
         resp = make_response(sample_load.to_csv(index=False))
         resp.headers["Content-Disposition"] = "attachment; filename=export.csv"
         resp.headers["Content-Type"] = "text/csv"
