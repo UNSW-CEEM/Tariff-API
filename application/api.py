@@ -6,6 +6,8 @@ import pandas as pd
 from flask_cors import CORS
 import sqlite3
 import numpy as np
+import geojson
+from shapely.geometry import Point, shape
 
 from werkzeug.utils import secure_filename
 
@@ -150,6 +152,32 @@ def weather_data(start_date, end_date, lat, long):
         data_w = data_w.drop_duplicates(subset='TS', keep='last')
         data_w2 = data_w.to_json(orient='records')
         return jsonify(data_w2)
+
+#  weather data from NASA Power
+@app.route('/dnsp/<lat>/<long>')
+def find_dnsp(lat, long):
+    # path_to_file = 'dnsp_finder/latest-distribution-boundaries.geojson'
+
+    with open(os.path.join('application', 'latest-distribution-boundaries.geojson')) as f:
+        gj = geojson.load(f)
+
+    s_list = gj['features']
+
+    p = Point([float(long), float(lat)])
+
+    found_dnsp = False
+    dnsp_name = ''
+    dnsp_index = -1
+
+    for i in range(0, len(s_list)):
+        if (shape(s_list[i].geometry).contains(p)):
+            found_dnsp = True
+            dnsp_index = i
+            break
+    if (found_dnsp):
+        dnsp_name = s_list[dnsp_index].properties.get("network")
+
+    return jsonify(dnsp_name)
 
 
 # #  Tariff Docs
