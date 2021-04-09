@@ -6,7 +6,7 @@ import pandas as pd
 from flask_cors import CORS
 import sqlite3
 import numpy as np
-import geojson
+# import geojson
 from shapely.geometry import Point, shape
 
 from werkzeug.utils import secure_filename
@@ -157,7 +157,6 @@ def weather_data(start_date, end_date, lat, long):
 @app.route('/dnsp/<lat>/<long>')
 def find_dnsp(lat, long):
     # path_to_file = 'dnsp_finder/latest-distribution-boundaries.geojson'
-
     with open(os.path.join('application', 'latest-distribution-boundaries.geojson')) as f:
         gj = geojson.load(f)
 
