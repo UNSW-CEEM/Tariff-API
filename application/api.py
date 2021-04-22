@@ -7,7 +7,7 @@ from flask_cors import CORS
 import sqlite3
 import numpy as np
 # import geojson
-from shapely.geometry import Point, shape
+# from shapely.geometry import Point, shape
 
 from werkzeug.utils import secure_filename
 
