@@ -251,6 +251,11 @@ def upload_file():
             Nem12.reset_index(inplace=True, drop=True)
             sample_load = Nem12[['Datetime', 'kWh']].copy()
             sample_load.rename(columns={'Datetime': 'TS'}, inplace=True)
+        elif file_read.shape[1] ==2:
+           # It's two column and just need to remove the 29Feb and make it 15 min
+            sample_load = file_read.copy()
+            sample_load.columns = ['TS', 'kWh']
+            sample_load['TS'] = pd.to_datetime(sample_load['TS'],format="%d/%m/%Y %H:%M")
         else:
             # file_read_2 = pd.read_csv(file)
             file_read_2 = file_read.copy()
