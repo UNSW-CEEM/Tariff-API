@@ -286,7 +286,7 @@ def upload_file():
     return '''
     <!doctype html>
     <title>Upload your load profile</title>
-    <h1>Convert your load profile to standard format</h1>
+    <h1>Convert your load profile to standard format (NEM12 and WebGraph)</h1>
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
       <input type=submit value=Upload>
