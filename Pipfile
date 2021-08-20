@@ -10,8 +10,6 @@ routes = "*"
 pandas = "*"
 gunicorn = "*"
 flask-cors = "*"
-geojson = "*"
-shapely = "*"
 
 [dev-packages]
 
