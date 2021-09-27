@@ -26,24 +26,24 @@ def base():
 # Here you go to http://127.0.0.1:5000/LoadProfiles/Avg
 # This is for returning the average load profile of all customers
 
-@app.route('/LoadProfiles/Avg')
-def avgload():
-    with open(os.path.join('application','AllData.json')) as data_file:
-        data_loaded = json.load(data_file)
-        return jsonify(data_loaded)
+# @app.route('/LoadProfiles/Avg')
+# def avgload():
+#     with open(os.path.join('application','AllData.json')) as data_file:
+#         data_loaded = json.load(data_file)
+#         return jsonify(data_loaded)
 
 
 # Here you go to http://127.0.0.1:5000/LoadProfiles/Demog/lpnum
 # this is for returning the average load profile of a selected subset of users
 
-@app.route('/LoadProfiles/Demog/<lpnum>')
-def data(lpnum):
-    with open(os.path.join('application','AllData_Demog.json')) as data_file:
-        data_loaded = json.load(data_file)
-        for i in range(len(data_loaded)):
-            data_loaded[i] = {k: data_loaded[i][k] for k in data_loaded[i] if (k == lpnum or k == 'TS')}
-
-    return jsonify(data_loaded)
+# @app.route('/LoadProfiles/Demog/<lpnum>')
+# def data(lpnum):
+#     with open(os.path.join('application','AllData_Demog.json')) as data_file:
+#         data_loaded = json.load(data_file)
+#         for i in range(len(data_loaded)):
+#             data_loaded[i] = {k: data_loaded[i][k] for k in data_loaded[i] if (k == lpnum or k == 'TS')}
+#
+#     return jsonify(data_loaded)
 
 
 # Here you go to http://127.0.0.1:5000/Tariffs/AllTariffs
@@ -115,6 +115,11 @@ def retail_tariff():
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
 
+@app.route('/electricity-tariffs/default_for_sunspot')
+def retail_tariff():
+    with open(os.path.join('application', 'Tariffs_Retail_default_sunspot.json')) as data_file:
+        data_loaded = json.load(data_file)
+        return jsonify(data_loaded)
 
 #  For SunSpoT project. We will remove this later
 @app.route('/elec-tariffs/retail')
