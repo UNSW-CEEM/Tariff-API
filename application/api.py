@@ -116,7 +116,7 @@ def retail_tariff():
         return jsonify(data_loaded)
 
 @app.route('/electricity-tariffs/default_for_sunspot')
-def retail_tariff():
+def default_for_sunspot():
     with open(os.path.join('application', 'Tariffs_Retail_default_sunspot.json')) as data_file:
         data_loaded = json.load(data_file)
         return jsonify(data_loaded)
