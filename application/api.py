@@ -151,19 +151,17 @@ def network_tariff():
 def weather_data(start_date, end_date, lat, long):
     lat = round(2 * float(lat)) / 2
     long = round(2 * float(long)) / 2
-    # with sqlite3.connect(os.path.join('application', 'nasa_power.db')) as con:
-    #     lat_long_list = pd.read_sql_query(con=con, sql='select distinct lat, long from data')
-    #     lat_long_list2 = lat_long_list.copy()
-    #     lat_long_list2['Lat'] = abs(lat_long_list['Lat'] - lat)
-    #     lat_long_list2['Long'] = abs(lat_long_list['Long'] - long)
-    #     lat_long_list2['both'] = lat_long_list2['Lat'] + lat_long_list2['Long']
-    #     ind_min = lat_long_list2['both'].idxmin()
-    #     lat_new = lat_long_list.loc[ind_min, 'Lat']
-    #     long_new = lat_long_list.loc[ind_min, 'Long']
-
     with sqlite3.connect(os.path.join('application', 'nasa_power.db')) as con:
+        lat_long_list = pd.read_sql_query(con=con, sql='select distinct lat, long from data')
+        lat_long_list2 = lat_long_list.copy()
+        lat_long_list2['Lat'] = abs(lat_long_list['Lat'] - lat)
+        lat_long_list2['Long'] = abs(lat_long_list['Long'] - long)
+        lat_long_list2['both'] = lat_long_list2['Lat'] + lat_long_list2['Long']
+        ind_min = lat_long_list2['both'].idxmin()
+        lat_new = lat_long_list.loc[ind_min, 'Lat']
+        long_new = lat_long_list.loc[ind_min, 'Long']
         data_w = pd.read_sql_query(con=con, sql='select TS, CDD, HDD from data where TS >= {} and TS <= {}'
-                                                ' and lat == {} and long == {}'.format(start_date, end_date, str(lat), str(long)))
+                                                ' and lat == {} and long == {}'.format(start_date, end_date, str(lat_new), str(long_new)))
         data_w = data_w.drop_duplicates(subset='TS', keep='last')
         data_w2 = data_w.to_json(orient='records')
         return jsonify(data_w2)
